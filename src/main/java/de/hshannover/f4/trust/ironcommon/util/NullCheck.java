@@ -36,3 +36,25 @@
  * limitations under the License.
  * #L%
  */
+package de.hshannover.f4.trust.ironcommon.util;
+
+/**
+ * Copied from project: irond (https://github.com/trustathsh/irond.git
+ * Package: src.de.fhhannover.inform.iron.mapserver.utils
+ *
+ * Stupid Helper Class
+ * 
+ * @author aw
+ */
+public class NullCheck {
+	
+	/**
+	 * If obj is null print the statck and throw a {@link NullPointerException}
+	 * with message msg.
+	 */
+	public static void check(Object obj, String msg) {
+		if (obj == null) {
+			throw new NullPointerException(msg);
+		}
+	}
+}

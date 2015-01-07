@@ -36,3 +36,35 @@
  * limitations under the License.
  * #L%
  */
+package de.hshannover.f4.trust.ironcommon.properties;
+
+import java.io.IOException;
+import java.util.Map;
+
+import de.hshannover.f4.trust.ironcommon.yaml.YamlWriter;
+
+/**
+ * Class that encapsulates writing of Property-YAML-files.
+ * @author MR
+ */
+public class PropertiesWriter {
+
+	private String mFileName;
+
+	/**
+	 * Create a JyamlWriter for application properties.
+	 * @param fileName The file name or the file path to the yml-file.
+	 */
+	public PropertiesWriter(String fileName) {
+		mFileName = fileName;
+	}
+
+	/**
+	 * Save the Map<String, Object> to the yml-file.
+	 * @param propertiesData The Object to be stored.
+	 * @throws IOException If the file could not open or is a directory.
+	 */
+	public void save(Map<String, Object> propertiesData) throws IOException {
+		YamlWriter.persist(mFileName, propertiesData);
+	}
+}

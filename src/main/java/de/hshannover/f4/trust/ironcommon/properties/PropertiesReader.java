@@ -36,3 +36,35 @@
  * limitations under the License.
  * #L%
  */
+package de.hshannover.f4.trust.ironcommon.properties;
+
+import java.io.IOException;
+import java.util.Map;
+
+import de.hshannover.f4.trust.ironcommon.yaml.YamlReader;
+
+/**
+ * Class that encapsulates reading of Property-YAML-files.
+ * @author MR
+ */
+public class PropertiesReader {
+
+	private String mFileName;
+
+	/**
+	 * Create a JyamlReader for application properties.
+	 * @param fileName The file name or the file path to the yml-file.
+	 */
+	public PropertiesReader(String fileName) {
+		mFileName = fileName;
+	}
+
+	/**
+	 * Load the application properties as Map<String, Object>.
+	 * @return A Map<String, Object> with property keys and values.
+	 * @throws IOException If the file could not open, create or is a directory.
+	 */
+	public Map<String, Object> load() throws IOException {
+		return YamlReader.loadMap(mFileName);
+	}
+}
