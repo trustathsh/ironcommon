@@ -7,17 +7,17 @@
  *    | | | |  | |_| \__ \ |_| | (_| |  _  |\__ \|  _  |
  *    |_| |_|   \__,_|___/\__|\ \__,_|_| |_||___/|_| |_|
  *                             \____/
- * 
+ *
  * =====================================================
- * 
+ *
  * Hochschule Hannover
  * (University of Applied Sciences and Arts, Hannover)
  * Faculty IV, Dept. of Computer Science
  * Ricklinger Stadtweg 118, 30459 Hannover, Germany
- * 
+ *
  * Email: trust@f4-i.fh-hannover.de
  * Website: http://trust.f4.hs-hannover.de/
- * 
+ *
  * This file is part of ironcommon, version 0.1.0, implemented by the Trust@HsH
  * research group at the Hochschule Hannover.
  * %%
@@ -26,9 +26,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,17 +46,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Util {
+/**
+ * @author Marcel Reichenbach
+ *
+ */
+public final class Util {
 
-	// ****************************
-	// ****** common methods ******
-	// ****************************
+	private Util() {
+	}
 
 	/**
-	 * 1. Cleans the system after the test.
-	 * 2. Tests if the test file exists.
-	 * 3. Tests if all input or output streams were closed.
-	 * 
+	 * 1. Cleans the system after the test. 2. Tests if the test file exists. 3.
+	 * Tests if all input or output streams were closed.
+	 *
 	 * @param filePath
 	 */
 	public static void checkAndDeleteTestFile(String filePath) {
@@ -66,61 +68,72 @@ public class Util {
 
 	/**
 	 * 1. Tests if the test file exists.
-	 * 
+	 *
 	 * @param filePath
 	 */
-	public static void checkExistsTestFile(String filePath){
+	public static void checkExistsTestFile(String filePath) {
 		File testFile = new File(filePath);
-		if(!testFile.exists()){
-			throw new RuntimeException("The test file " + filePath + " not exists!");
+		if (!testFile.exists()) {
+			throw new RuntimeException("The test file " + filePath
+					+ " not exists!");
 		}
 	}
 
 	/**
-	 * 1. Cleans the system after the test.
-	 * 2. Tests if all input or output streams were closed.
-	 * 
+	 * 1. Cleans the system after the test. 2. Tests if all input or output
+	 * streams were closed.
+	 *
 	 * @param filePath
 	 */
-	public static void deleteTestFile(String filePath){
+	public static void deleteTestFile(String filePath) {
 		File testFile = new File(filePath);
-		if(testFile.exists()){
-			if(!testFile.delete()){
-				throw new RuntimeException("Test file " + filePath + " could not be deleted!");
+		if (testFile.exists()) {
+			if (!testFile.delete()) {
+				throw new RuntimeException("Test file " + filePath
+						+ " could not be deleted!");
 			}
 		}
 	}
 
-	public static List<String> buildTestList(){
-		ArrayList<String> collectionsTest_List = new ArrayList<String>();
-		collectionsTest_List.add("foo");
-		collectionsTest_List.add("bar");
-		collectionsTest_List.add("fubar");
-		collectionsTest_List.add("baz");
-		collectionsTest_List.add("qux");
-		collectionsTest_List.add("quux");
-		collectionsTest_List.add("The test String!");
-		collectionsTest_List.add("!\"§$%&/\\()=?#'+*~-_.:,;µ<>|@€^°");
-		return collectionsTest_List;
+	/**
+	 * @return a {@link List} containing some exemplary values
+	 */
+	public static List<String> buildTestList() {
+		ArrayList<String> collectionsTestList = new ArrayList<String>();
+		collectionsTestList.add("foo");
+		collectionsTestList.add("bar");
+		collectionsTestList.add("fubar");
+		collectionsTestList.add("baz");
+		collectionsTestList.add("qux");
+		collectionsTestList.add("quux");
+		collectionsTestList.add("The test String!");
+		collectionsTestList.add("!\"§$%&/\\()=?#'+*~-_.:,;µ<>|@€^°");
+		return collectionsTestList;
 	}
 
-	public static Set<String> buildTestSet(){
-		Set<String> collectionsTest_Set = new HashSet<String>();
-		collectionsTest_Set.add("!\"§$%&/\\()=?#'+*~-_.:,;µ<>|@€^°");
-		collectionsTest_Set.add("The test String!");
-		collectionsTest_Set.add("quux");
-		collectionsTest_Set.add("qux");
-		collectionsTest_Set.add("baz");
-		collectionsTest_Set.add("fubar");
-		collectionsTest_Set.add("bar");
-		collectionsTest_Set.add("foo");
-		return collectionsTest_Set;
+	/**
+	 * @return a {@link Set} containing some exemplary values
+	 */
+	public static Set<String> buildTestSet() {
+		Set<String> collectionsTestSet = new HashSet<String>();
+		collectionsTestSet.add("!\"§$%&/\\()=?#'+*~-_.:,;µ<>|@€^°");
+		collectionsTestSet.add("The test String!");
+		collectionsTestSet.add("quux");
+		collectionsTestSet.add("qux");
+		collectionsTestSet.add("baz");
+		collectionsTestSet.add("fubar");
+		collectionsTestSet.add("bar");
+		collectionsTestSet.add("foo");
+		return collectionsTestSet;
 	}
 
-	public static Map<String, Object> buildTestMap(){
-		Map<String, Object> collectionsTest_Map = new HashMap<String, Object>();
-		collectionsTest_Map.put("mTestList", buildTestList());
-		collectionsTest_Map.put("mTestSet", buildTestSet());
-		return collectionsTest_Map;
+	/**
+	 * @return {@link Map} containing a {@link List} and a {@link Set}
+	 */
+	public static Map<String, Object> buildTestMap() {
+		Map<String, Object> collectionsTestMap = new HashMap<String, Object>();
+		collectionsTestMap.put("mTestList", buildTestList());
+		collectionsTestMap.put("mTestSet", buildTestSet());
+		return collectionsTestMap;
 	}
 }

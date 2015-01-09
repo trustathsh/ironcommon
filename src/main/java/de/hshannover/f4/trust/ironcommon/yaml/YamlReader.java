@@ -58,7 +58,7 @@ import de.hshannover.f4.trust.ironcommon.util.NullCheck;
  */
 public final class YamlReader {
 
-	private static Logger logger = Logger.getLogger(YamlReader.class);
+	private static Logger mLogger = Logger.getLogger(YamlReader.class);
 
 	/**
 	 * Only static calls are allowed.
@@ -98,7 +98,7 @@ public final class YamlReader {
 				throw new IOException("Could not open " + fileName + ": "
 						+ e.getMessage());
 			} else {
-				logger.debug("File: "
+				mLogger.debug("File: "
 						+ fileName
 						+ " doens't exist and it's not a directory, try to create it.");
 				// If it doens't exist and it's not a directory, try to create
