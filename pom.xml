@@ -15,7 +15,9 @@
 	<name>ironcommon</name>
 	<url>http://trust.f4.hs-hannover.de</url>
 	<description>
-		A helper project for ifmapj-based IF-MAP clients.
+          A helper and utility project (mostly) for ifmapj-based IF-MAP clients.
+          Contains classes for configuration file handling as well as checkstyle
+          and Eclipse formatter files.
 	</description>
 	<organization>
 		<name>Trust@HsH</name>
