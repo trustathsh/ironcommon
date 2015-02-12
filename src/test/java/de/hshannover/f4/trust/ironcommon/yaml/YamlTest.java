@@ -50,20 +50,30 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.hshannover.f4.trust.ironcommon.util.Util;
+import de.hshannover.f4.trust.ironcommon.util.TestUtilities;
 
 /**
+ * Test class for {@link YamlReader} and {@link YamlWriter}.
+ *
  * @author Marcel Reichenbach
  *
  */
 public class YamlTest {
 
-	private final String mNotExistingFilePath = "src/test/resources/123456789/test.yml";
-	private final String mFilePathYamlReaderCreateNewFileTest = "src/test/resources/yamlReaderCreateNewFileTest.yml";
-	private final String mFilePathYamlWriterCreateNewFileTest = "src/test/resources/yamlWriterCreateNewFileTest.yml";
-	private final String mFilePathSimpleDatatypeTest = "src/test/resources/testSimpleDatatyps.yml";
-	private final String mFilePathCollectionsTest = "src/test/resources/testCollections.yml";
-	private final String mFilePathEmptyMapTest = "src/test/resources/testEmptyMap.yml";
+	private static final String DIRECTORY_TEST_RESOURCES = "src/test/resources/";
+
+	private final String mNotExistingFilePath = DIRECTORY_TEST_RESOURCES
+			+ "123456789/test.yml";
+	private final String mFilePathYamlReaderCreateNewFileTest = DIRECTORY_TEST_RESOURCES
+			+ "yamlReaderCreateNewFileTest.yml";
+	private final String mFilePathYamlWriterCreateNewFileTest = DIRECTORY_TEST_RESOURCES
+			+ "yamlWriterCreateNewFileTest.yml";
+	private final String mFilePathSimpleDatatypeTest = DIRECTORY_TEST_RESOURCES
+			+ "testSimpleDatatyps.yml";
+	private final String mFilePathCollectionsTest = DIRECTORY_TEST_RESOURCES
+			+ "testCollections.yml";
+	private final String mFilePathEmptyMapTest = DIRECTORY_TEST_RESOURCES
+			+ "testEmptyMap.yml";
 
 	private final String mStringYamlWriterSaveObject = "YamlWriterSaveObject";
 	private final String mSimpleDatatypeTestString = "String-Value Object";
@@ -71,37 +81,43 @@ public class YamlTest {
 	private final Double mSimpleDatatypeTestDouble = 123456789.123456789;
 	private final Boolean mSimpleDatatypeTestBoolean = true;
 
-	private final Map<String, Object> mCollectionsTestMap = Util.buildTestMap();
-	private final List<String> mCollectionsTestList = Util.buildTestList();
-	private final Set<String> mCollectionsTestSet = Util.buildTestSet();
+	private final Map<String, Object> mCollectionsTestMap = TestUtilities
+			.buildTestMap();
+	private final List<String> mCollectionsTestList = TestUtilities
+			.buildTestList();
+	private final Set<String> mCollectionsTestSet = TestUtilities
+			.buildTestSet();
 
 	/**
-	 *
+	 * Sets up every test by creating the folder for storing temporary test
+	 * files.
 	 */
 	@Before
 	public void setUp() {
-		File f = new File("src/test/resources/");
+		File f = new File(DIRECTORY_TEST_RESOURCES);
 		if (!f.exists()) {
-			// If it doens't exist, try to create it.
 			f.mkdir();
 		}
 	}
 
 	/**
-	 * 1. Tests the IOException from YamlWriter when the file path not exists.
+	 * Tests the {@link IOException} from {@link YamlWriter} when the file does
+	 * not exists.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test(expected = IOException.class)
-	public void testYamlWriterIOException() throws IOException {
+	public void testYamlWriterIoException() throws IOException {
 		YamlWriter.persist(mNotExistingFilePath, mStringYamlWriterSaveObject);
 	}
 
 	/**
-	 * 1. Tests the NullPointerException from YamlWriter when the filename
-	 * parameter is null.
+	 * Tests the {@link NullPointerException} from {@link YamlWriter} when the
+	 * filename parameter is null.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testYamlWriterNullPointerExceptionWithEmptyFilenameParameter()
@@ -110,10 +126,11 @@ public class YamlTest {
 	}
 
 	/**
-	 * 1. Tests the NullPointerException from YamlWriter when the object
-	 * parameter is null.
+	 * Tests the {@link NullPointerException} from {@link YamlWriter} when the
+	 * object parameter is null.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testYamlWriterNullPointerExceptionWithEmptyObjectParameter()
@@ -122,38 +139,44 @@ public class YamlTest {
 	}
 
 	/**
-	 * 1. Tests the YamlWriter when the file does not exist if it is created.
+	 * Tests the if the {@link YamlWriter} creates the file when it does not
+	 * exists.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test
 	public void testYamlWriterCreateNewFile() throws IOException {
 		// clean the system
-		Util.deleteTestFile(mFilePathYamlWriterCreateNewFileTest);
+		TestUtilities.deleteTestFile(mFilePathYamlWriterCreateNewFileTest);
 
 		// create the file
 		YamlWriter.persist(mFilePathYamlWriterCreateNewFileTest,
 				mStringYamlWriterSaveObject);
 
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathYamlWriterCreateNewFileTest);
+		TestUtilities
+				.checkAndDeleteTestFile(mFilePathYamlWriterCreateNewFileTest);
 	}
 
 	/**
-	 * 1. Tests the IOException from YamlReader when the file path not exists.
+	 * Tests the {@link IOException} from {@link YamlReader} when the file does
+	 * not exists.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test(expected = IOException.class)
-	public void testYamlReaderIOException() throws IOException {
+	public void testYamlReaderIoException() throws IOException {
 		YamlReader.loadAs(mNotExistingFilePath, String.class);
 	}
 
 	/**
-	 * 1. Tests the NullPointerException from YamlReader when the filename
-	 * parameter is null.
+	 * Tests the {@link NullPointerException} from {@link YamlReader} when the
+	 * filename parameter is null.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testYamlReaderNullPointerExceptionWithEmptyFilenameParameter()
@@ -162,10 +185,11 @@ public class YamlTest {
 	}
 
 	/**
-	 * 1. Tests the NullPointerException from YamlReader when the class
-	 * parameter is null.
+	 * Tests the {@link NullPointerException} from {@link YamlReader} when the
+	 * class parameter is null.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testYamlReaderNullPointerExceptionWithEmptyClassParameter()
@@ -174,29 +198,36 @@ public class YamlTest {
 	}
 
 	/**
-	 * 1. Tests the YamlReader when the file does not exist if it is created.
+	 * Tests the if the {@link YamlReader} creates the file when it does not
+	 * exists.
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test
 	public void testYamlReaderCreateNewFile() throws IOException {
 		// clean the system
-		Util.deleteTestFile(mFilePathYamlReaderCreateNewFileTest);
+		TestUtilities.deleteTestFile(mFilePathYamlReaderCreateNewFileTest);
 
 		// create the file
 		YamlReader.loadAs(mFilePathYamlReaderCreateNewFileTest, String.class);
 
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathYamlReaderCreateNewFileTest);
+		TestUtilities
+				.checkAndDeleteTestFile(mFilePathYamlReaderCreateNewFileTest);
 	}
 
 	/**
+	 * Tests if the result of a load-call of a {@link YamlReader} returns an
+	 * empty list, when the file does not exists.
+	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test
 	public void testYamlReaderEmptyMap() throws IOException {
 		// clean the system
-		Util.deleteTestFile(mFilePathEmptyMapTest);
+		TestUtilities.deleteTestFile(mFilePathEmptyMapTest);
 
 		// create the file
 		Map<String, Object> loadedMap = YamlReader
@@ -213,15 +244,18 @@ public class YamlTest {
 		}
 
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathEmptyMapTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathEmptyMapTest);
 	}
 
 	/**
-	 * 1. Tests if String|int|double|boolean Collections can be stored. 2. Tests
-	 * if String|int|double|boolean Collections can be loaded. 3. Checked for
-	 * equality
+	 * <ol>
+	 * <li>Tests if String|int|double|boolean Collections can be stored.</li>
+	 * <li>Tests if String|int|double|boolean Collections can be loaded.</li>
+	 * <li>Checked for equality</li>
+	 * </ol>
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test
 	public void testSimpleDatatypes() throws IOException {
@@ -249,14 +283,18 @@ public class YamlTest {
 		assertEquals(mSimpleDatatypeTestBoolean,
 				YamlReader.loadAs(mFilePathSimpleDatatypeTest, Boolean.class));
 
-		Util.checkAndDeleteTestFile(mFilePathSimpleDatatypeTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathSimpleDatatypeTest);
 	}
 
 	/**
-	 * 1. Tests if List|Set|Map Collections can be stored. 2. Tests if
-	 * List|Set|Map Collections can be loaded. 3. Checked for equality
+	 * <ol>
+	 * <li>Tests if List|Set|Map Collections can be stored.</li>
+	 * <li>Tests if List|Set|Map Collections can be loaded.</li>
+	 * <li>Checked for equality</li>
+	 * </ol>
 	 *
 	 * @throws IOException
+	 *             thrown when the file does not exist
 	 */
 	@Test
 	public void testCollections() throws IOException {
@@ -277,7 +315,7 @@ public class YamlTest {
 		assertEquals(mCollectionsTestMap,
 				YamlReader.loadMap(mFilePathCollectionsTest));
 
-		Util.checkAndDeleteTestFile(mFilePathCollectionsTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathCollectionsTest);
 	}
 
 }

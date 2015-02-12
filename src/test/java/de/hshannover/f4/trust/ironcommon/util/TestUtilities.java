@@ -47,55 +47,67 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Helper class with methods for testing.
+ *
  * @author Marcel Reichenbach
  *
  */
-public final class Util {
+public final class TestUtilities {
 
-	private Util() {
+	/**
+	 * Only static calls are allowed.
+	 */
+	private TestUtilities() {
 	}
 
 	/**
-	 * 1. Cleans the system after the test. 2. Tests if the test file exists. 3.
-	 * Tests if all input or output streams were closed.
+	 * <ol>
+	 * <li>Cleans the system after the test</li>
+	 * <li>Tests if the test file exists.</li>
+	 * <li>Deletes the test file.</li>
+	 * </ol>
 	 *
-	 * @param filePath
+	 * @param fileName
+	 *            the absolute path of the testfile
 	 */
-	public static void checkAndDeleteTestFile(String filePath) {
-		checkExistsTestFile(filePath);
-		deleteTestFile(filePath);
+	public static void checkAndDeleteTestFile(String fileName) {
+		checkExistsTestFile(fileName);
+		deleteTestFile(fileName);
 	}
 
 	/**
-	 * 1. Tests if the test file exists.
+	 * Tests if the test file exists.
 	 *
-	 * @param filePath
+	 * @param fileName
+	 *            the absolute path of the testfile
 	 */
-	public static void checkExistsTestFile(String filePath) {
-		File testFile = new File(filePath);
+	public static void checkExistsTestFile(String fileName) {
+		File testFile = new File(fileName);
 		if (!testFile.exists()) {
-			throw new RuntimeException("The test file " + filePath
+			throw new RuntimeException("The test file " + fileName
 					+ " not exists!");
 		}
 	}
 
 	/**
-	 * 1. Cleans the system after the test. 2. Tests if all input or output
-	 * streams were closed.
+	 * Deletes the test file.
 	 *
-	 * @param filePath
+	 * @param fileName
+	 *            the absolute path of the testfile
 	 */
-	public static void deleteTestFile(String filePath) {
-		File testFile = new File(filePath);
+	public static void deleteTestFile(String fileName) {
+		File testFile = new File(fileName);
 		if (testFile.exists()) {
 			if (!testFile.delete()) {
-				throw new RuntimeException("Test file " + filePath
+				throw new RuntimeException("Test file " + fileName
 						+ " could not be deleted!");
 			}
 		}
 	}
 
 	/**
+	 * Creates a {@link List} with dummy values.
+	 *
 	 * @return a {@link List} containing some exemplary values
 	 */
 	public static List<String> buildTestList() {
@@ -112,6 +124,8 @@ public final class Util {
 	}
 
 	/**
+	 * Creates a {@link Set} with dummy values.
+	 *
 	 * @return a {@link Set} containing some exemplary values
 	 */
 	public static Set<String> buildTestSet() {
@@ -128,6 +142,8 @@ public final class Util {
 	}
 
 	/**
+	 * Creates a {@link Map} with a dummy {@link List} and dummy {@link Set}.
+	 *
 	 * @return {@link Map} containing a {@link List} and a {@link Set}
 	 */
 	public static Map<String, Object> buildTestMap() {

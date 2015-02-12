@@ -45,12 +45,12 @@ import java.io.IOException;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import de.hshannover.f4.trust.ironcommon.util.NullCheck;
+import de.hshannover.f4.trust.ironcommon.util.ObjectChecks;
 
 /**
  * Class that encapsulates writing of YAML-files.
  *
- * @author MR
+ * @author Marcel Reichenbach
  */
 public final class YamlWriter {
 
@@ -67,19 +67,20 @@ public final class YamlWriter {
 	}
 
 	/**
-	 * Save the obj to the yml-file.
+	 * Save a given {@link Object} to the yml-file.
 	 *
 	 * @param fileName
-	 *            The file name or the file path to the yml-file.
+	 *            The file name of the yml-file.
 	 * @param object
-	 *            The Object to be stored.
+	 *            The {@link Object} to be stored.
 	 * @throws IOException
-	 *             If the file could not open or is a directory.
+	 *             If the file could not be opened, created (when it doesn't
+	 *             exist) or the given filename is a directory.
 	 */
 	public static synchronized void persist(String fileName, Object object)
 			throws IOException {
-		NullCheck.check(fileName, "fileName is null");
-		NullCheck.check(object, "object is null");
+		ObjectChecks.checkForNullReference(fileName, "fileName is null");
+		ObjectChecks.checkForNullReference(object, "object is null");
 
 		FileWriter fileWriter = null;
 		File f = null;

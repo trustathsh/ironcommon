@@ -49,12 +49,12 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
-import de.hshannover.f4.trust.ironcommon.util.NullCheck;
+import de.hshannover.f4.trust.ironcommon.util.ObjectChecks;
 
 /**
  * Class that encapsulates reading of YAML-files.
  *
- * @author MR
+ * @author Marcel Reichenbach
  */
 public final class YamlReader {
 
@@ -67,23 +67,25 @@ public final class YamlReader {
 	}
 
 	/**
-	 *
-	 * Load a Object from a yml-File. Attention! If the File exists but it is
-	 * empty then snakyaml returns null.
+	 * Tries to load the content of a yml-file as instances of a given
+	 * {@link Class}. If the file exists but is empty, the file is newly created
+	 * and null is returned.
 	 *
 	 * @param fileName
-	 *            The file name or the file path to the yml-file.
+	 *            The file name of the yml-file.
 	 * @param clazz
-	 *            The returned data-type.
-	 * @return The yml-File as Class<T>.
+	 *            The data-type that the content of the yml-file shall be cast
+	 *            into.
+	 * @return The content of the yml-file as instances of Class<T>.
 	 * @throws IOException
-	 *             If the file could not open, create or is a directory.
+	 *             If the file could not be opened, created (when it doesn't
+	 *             exist) or the given filename is a directory.
 	 */
 	@SuppressWarnings("unchecked")
 	public static synchronized <T> T loadAs(String fileName, Class<T> clazz)
 			throws IOException {
-		NullCheck.check(fileName, "fileName is null");
-		NullCheck.check(clazz, "clazz is null");
+		ObjectChecks.checkForNullReference(fileName, "fileName is null");
+		ObjectChecks.checkForNullReference(clazz, "clazz is null");
 
 		FileReader fileReader = null;
 		File f = null;
@@ -100,7 +102,7 @@ public final class YamlReader {
 			} else {
 				mLogger.debug("File: "
 						+ fileName
-						+ " doens't exist and it's not a directory, try to create it.");
+						+ " doesn't exist and it's not a directory, try to create it.");
 				// If it doens't exist and it's not a directory, try to create
 				// it.
 				try {
@@ -129,18 +131,19 @@ public final class YamlReader {
 	 * Load a yml-File as Map<String, Object>.
 	 *
 	 * @param fileName
-	 *            The file name or the file path to the yml-file.
-	 * @return If the File exists but it is empty then returns a empty
-	 *         Map<String, Object>.
+	 *            The file name of the yml-file.
+	 * @return a Map<String, Object> with the content of the yml-file. If the
+	 *         File exists but is empty, a empty Map<String, Object> is
+	 *         returned.
 	 * @throws IOException
-	 *             If the file could not open, create or is a directory.
+	 *             If the file could not be opened, created (when it doesn't
+	 *             exist) or the given filename is a directory.
 	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> loadMap(String fileName)
 			throws IOException {
 		Map<String, Object> ymlMap = loadAs(fileName, HashMap.class);
 		if (ymlMap == null) {
-			// then the File is empty return a empty HashMap
 			return new HashMap<String, Object>();
 		}
 		return ymlMap;

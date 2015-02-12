@@ -39,33 +39,37 @@
 package de.hshannover.f4.trust.ironcommon.properties;
 
 /**
- * For all Exceptions in the Properties.class.
- * @author MR
+ * A {@link Exception} class for {@link Properties}-based exceptions.
+ *
+ * @author Marcel Reichenbach
  *
  */
 public class PropertyException extends Exception {
 
 	private static final long serialVersionUID = 5703896373482852374L;
 
-	private String mMsg;
+	private String mMessage;
 
 	/**
-	 * A new PropertyException.
+	 * Creates a {@link PropertyException} without a message.
 	 */
-	public PropertyException() { }
+	public PropertyException() {
+	}
 
 	/**
-	 * A new PropertyException with msg.
-	 * @param msg
+	 * Creates a {@link PropertyException} with a message.
+	 *
+	 * @param message
+	 *            a {@link String} message for the {@link Exception}
 	 */
-	public PropertyException(String msg) {
-		mMsg = msg;
+	public PropertyException(String message) {
+		mMessage = message;
 	}
 
 	@Override
 	public String toString() {
-		if (mMsg != null) {
-			return this.getClass().getSimpleName() + "(" + mMsg + ")";
+		if (mMessage != null) {
+			return this.getClass().getSimpleName() + "(" + mMessage + ")";
 		} else {
 			return this.getClass().getSimpleName();
 		}

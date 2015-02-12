@@ -44,25 +44,31 @@ import java.util.Map;
 import de.hshannover.f4.trust.ironcommon.yaml.YamlReader;
 
 /**
- * Class that encapsulates reading of Property-YAML-files.
- * @author MR
+ * Class that encapsulates reading of property-files.
+ *
+ * @author Marcel Reichenbach
  */
 public class PropertiesReader {
 
 	private String mFileName;
 
 	/**
-	 * Create a JyamlReader for application properties.
-	 * @param fileName The file name or the file path to the yml-file.
+	 * Create a {@link PropertiesReader} with a given filename.
+	 *
+	 * @param fileName
+	 *            The file name of the properties-file.
 	 */
 	public PropertiesReader(String fileName) {
 		mFileName = fileName;
 	}
 
 	/**
-	 * Load the application properties as Map<String, Object>.
+	 * Load the properties from the file as a Map<String, Object>.
+	 *
 	 * @return A Map<String, Object> with property keys and values.
-	 * @throws IOException If the file could not open, create or is a directory.
+	 * @throws IOException
+	 *             If the file could not be opened, created (when it doesn't
+	 *             exist) or the given filename is a directory.
 	 */
 	public Map<String, Object> load() throws IOException {
 		return YamlReader.loadMap(mFileName);

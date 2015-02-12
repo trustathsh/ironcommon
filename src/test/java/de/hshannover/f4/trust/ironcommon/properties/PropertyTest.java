@@ -48,16 +48,21 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.hshannover.f4.trust.ironcommon.util.Util;
+import de.hshannover.f4.trust.ironcommon.util.TestUtilities;
 
 /**
+ * Test class for {@link Properties}.
+ *
  * @author Marcel Reichenbach
  *
  */
 public class PropertyTest {
 
-	private final String mNotExistingFilePath = "src/test/resources/123456789/test.yml";
-	private final String mFilePathForEqualityTest = "src/test/resources/testEquality.yml";
+	private static final String DIRECTORY_TEST_RESOURCES = "src/test/resources/";
+	private final String mNotExistingFilePath = DIRECTORY_TEST_RESOURCES
+			+ "123456789/test.yml";
+	private final String mFilePathForEqualityTest = DIRECTORY_TEST_RESOURCES
+			+ "testEquality.yml";
 
 	private final String mKeyOneTokenKey = "foo1";
 	private final String mKeyTwoTokenKeys = "foo2.bar";
@@ -69,24 +74,26 @@ public class PropertyTest {
 	private final String mKeyValueTwoTokenKeys = "KeyValue_twoTokenKeys";
 	private final String mKeyValueManyTokenKeys = "KeyValue_manyTokenKeys";
 
-	private final List<String> mCollectionsTestList = Util.buildTestList();
+	private final List<String> mCollectionsTestList = TestUtilities
+			.buildTestList();
 
 	/**
-	 *
+	 * Sets up every test by creating the folder for storing temporary test
+	 * files.
 	 */
 	@Before
 	public void setUp() {
-		File f = new File("src/test/resources/");
+		File f = new File(DIRECTORY_TEST_RESOURCES);
 		if (!f.exists()) {
-			// If it doens't exist, try to create it.
 			f.mkdir();
 		}
 	}
 
 	/**
-	 * 1. Tests the PropertyException when the file path not exists.
+	 * Tests the PropertyException when the file path not exists.
 	 *
 	 * @throws PropertyException
+	 *             If loading the properties from the file fails.
 	 */
 	@Test(expected = PropertyException.class)
 	public void testPropertyException() throws PropertyException {
@@ -94,10 +101,11 @@ public class PropertyTest {
 	}
 
 	/**
-	 * 1. Tests the PropertyException from Properties when the filename
-	 * parameter is null.
+	 * Tests if a {@link PropertyException} is thrown from {@link Properties}
+	 * when the filename parameter is null.
 	 *
 	 * @throws PropertyException
+	 *             If loading the properties from the file fails.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testPropertyExceptionWithEmptyFilenameParameter()
@@ -106,30 +114,34 @@ public class PropertyTest {
 	}
 
 	/**
-	 * 1. Tests if String-Value can be stored and loaded under one token key. 2.
-	 * Tests if String-Value can be stored and loaded under two token keys. 3.
-	 * Tests if String-Value can be stored and loaded under many token keys.
+	 * <ol>
+	 * <li>Tests if String-Value can be stored and loaded under one token key.</li>
+	 * <li>Tests if String-Value can be stored and loaded under two token keys.</li>
+	 * <li>Tests if String-Value can be stored and loaded under many token keys.
+	 * </li>
+	 * </ol>
 	 *
 	 * @throws PropertyException
+	 *             If loading the properties from the file fails.
 	 */
 	@Test
 	public void testForEqualityWithEmptyProperties() throws PropertyException {
 		// clean the system
-		Util.deleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.deleteTestFile(mFilePathForEqualityTest);
 
 		// with one Token key
 		new Properties(mFilePathForEqualityTest).set(mKeyOneTokenKey,
 				mKeyValueOneTokenKey);
 		assertEquals(mKeyValueOneTokenKey, new Properties(
 				mFilePathForEqualityTest).getValue(mKeyOneTokenKey).toString());
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 
 		// with two Token keys
 		new Properties(mFilePathForEqualityTest).set(mKeyTwoTokenKeys,
 				mKeyValueTwoTokenKeys);
 		assertEquals(mKeyValueTwoTokenKeys, new Properties(
 				mFilePathForEqualityTest).getValue(mKeyTwoTokenKeys).toString());
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 
 		// with many Token keys
 		new Properties(mFilePathForEqualityTest).set(mKeyManyTokenKeys,
@@ -137,18 +149,19 @@ public class PropertyTest {
 		assertEquals(mKeyValueManyTokenKeys, new Properties(
 				mFilePathForEqualityTest).getValue(mKeyManyTokenKeys)
 				.toString());
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 	}
 
 	/**
-	 * 1. Tests whether existing values ​​are overwritten with new values.
+	 * Tests whether existing values ​​are overwritten with new values.
 	 *
 	 * @throws PropertyException
+	 *             If loading the properties from the file fails.
 	 */
 	@Test
 	public void testForEqualityWithFilledProperties() throws PropertyException {
 		// clean the system
-		Util.deleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.deleteTestFile(mFilePathForEqualityTest);
 
 		// setUp
 		Properties properties = new Properties(mFilePathForEqualityTest);
@@ -178,39 +191,40 @@ public class PropertyTest {
 				properties3.getValue(mKeyTwoTokenKeys2));
 
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 	}
 
 	/**
-	 * 1. Tests whether existing values ​​are overwritten with new values. This
-	 * new value is now a new Map. Example: foo: bar: fubar: test
+	 * Tests whether existing values ​​are overwritten with new values. This new
+	 * value is now a new Map.<br>
+	 * Example: foo: bar: fubar: test
 	 *
 	 * The new value is: foo: bar: fubar: baz: TEST
 	 *
 	 * @throws PropertyException
+	 *             If loading the properties from the file fails.
 	 */
 	@Test
 	public void testForEqualityWithFilledPropertiesAddNewMapProperty()
 			throws PropertyException {
 
 		// clean the system
-		Util.deleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.deleteTestFile(mFilePathForEqualityTest);
 		testForEqualityWithFilledPropertiesAddNewMapPropertyOneMap();
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 
 		// clean the system
-		Util.deleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.deleteTestFile(mFilePathForEqualityTest);
 		testForEqualityWithFilledPropertiesAddNewMapPropertyTwoMaps();
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 
 		// clean the system
-		Util.deleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.deleteTestFile(mFilePathForEqualityTest);
 		testForEqualityWithFilledPropertiesAddNewMapPropertyManyMaps();
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
-
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 	}
 
 	private void testForEqualityWithFilledPropertiesAddNewMapPropertyOneMap()
@@ -237,7 +251,6 @@ public class PropertyTest {
 				.getValue("");
 		// is the Map right
 		assertEquals(true, fooSubMap.equals(equalsMap));
-
 	}
 
 	private void testForEqualityWithFilledPropertiesAddNewMapPropertyTwoMaps()
@@ -263,7 +276,6 @@ public class PropertyTest {
 				.getValue("foo");
 		// is the Map right
 		assertEquals(true, fooSubMap.equals(equalsMap));
-
 	}
 
 	private void testForEqualityWithFilledPropertiesAddNewMapPropertyManyMaps()
@@ -292,20 +304,20 @@ public class PropertyTest {
 				.getValue("foo");
 		// is the Map right
 		assertEquals(true, fooSubMap.equals(equalsMap));
-
 	}
 
 	/**
 	 * 1. Tests the set(), when Properties is in a subMap
 	 *
 	 * @throws PropertyException
+	 *             If loading the properties from the file fails.
 	 */
 	@Test
-	public void testForEqualityWithFilledPropertiesSetFromAGet()
+	public void testForEqualityWithFilledPropertiesSetFromGet()
 			throws PropertyException {
 
 		// clean the system
-		Util.deleteTestFile(mFilePathForEqualityTest);
+		TestUtilities.deleteTestFile(mFilePathForEqualityTest);
 
 		// setUp
 		Properties properties = new Properties(mFilePathForEqualityTest);
@@ -331,7 +343,6 @@ public class PropertyTest {
 		assertEquals(true, fooSubMap.equals(equalsMap));
 
 		// tests if exists and clean the system
-		Util.checkAndDeleteTestFile(mFilePathForEqualityTest);
-
+		TestUtilities.checkAndDeleteTestFile(mFilePathForEqualityTest);
 	}
 }

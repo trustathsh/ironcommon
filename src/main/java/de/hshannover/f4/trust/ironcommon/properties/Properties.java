@@ -47,12 +47,13 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import de.hshannover.f4.trust.ironcommon.util.NullCheck;
+import de.hshannover.f4.trust.ironcommon.util.ObjectChecks;
 
 /**
- * Class that encapsulates application properties in YAML-files.
+ * Class that loads, handles and stores application properties in
+ * configuration-files.
  *
- * @author MR
+ * @author Marcel Reichenbach
  */
 public class Properties {
 
@@ -62,7 +63,7 @@ public class Properties {
 
 	private String mFileName;
 
-	private String mPreFixPropertyPath = "";
+	private String mPropertyPathPrefix = "";
 
 	private Logger mLogger = Logger.getLogger(Properties.class);
 
@@ -70,29 +71,31 @@ public class Properties {
 		mWriter = propertyOriginal.mWriter;
 		mReader = propertyOriginal.mReader;
 		mFileName = propertyOriginal.mFileName;
-		mPreFixPropertyPath = addPath(propertyOriginal.mPreFixPropertyPath,
+		mPropertyPathPrefix = addPath(propertyOriginal.mPropertyPathPrefix,
 				propertyKey);
 	}
 
 	/**
-	 * Create a ApplicationProperties for load and save Application-YAML files.
+	 * Create a {@link Properties} instance for a given filename.
 	 *
 	 * @param fileName
-	 *            The file name or the file path to the yml-file.
+	 *            the file name of the property-file.
 	 */
 	public Properties(String fileName) {
-		NullCheck.check(fileName, "fileName is null");
+		ObjectChecks.checkForNullReference(fileName, "fileName is null");
 		mFileName = fileName;
 		mWriter = new PropertiesWriter(mFileName);
 		mReader = new PropertiesReader(mFileName);
 	}
 
 	/**
-	 * Load the application properties as Map<String, Object>.
+	 * Load the properties as Map<String, Object>.
 	 *
 	 * @throws PropertyException
-	 *             If the file could not open, create or is a directory.
-	 * @return a {@link Map} of {@link String} and {@link Object}
+	 *             if the file could not be opened, created or is directed to a
+	 *             directory
+	 * @return a {@link Map} of {@link String} and {@link Object} containing the
+	 *         properties
 	 */
 	public Map<String, Object> load() throws PropertyException {
 		try {
@@ -103,54 +106,58 @@ public class Properties {
 	}
 
 	/**
-	 * Save all properties in a YAML-files and override them.
+	 * Save all properties in a file.
 	 *
 	 * @throws PropertyException
-	 *             If the file could not open or is a directory.
+	 *             if the file could not be opened, created or is directed to a
+	 *             directory
 	 */
-	public void save(Map<String, Object> applicationConfigs)
-			throws PropertyException {
+	public void save(Map<String, Object> properties) throws PropertyException {
 		try {
-			mWriter.save(applicationConfigs);
+			mWriter.save(properties);
 		} catch (IOException e) {
 			throw new PropertyException(e.getMessage());
 		}
 	}
 
 	/**
-	 * Get a new Properties from the property key. Only property keys accepted
-	 * but not a path.
+	 * Get a new Properties instance for the given property key. Only property
+	 * keys accepted but not a path (Example: key is allowed, not foo.bar.key).
 	 *
-	 * @param propertyKey
-	 * @return Properties A new Property instance of the propertyKey.
+	 * @param key
+	 *            the property key, for which a new instance of Properties shall
+	 *            be instantiated
+	 * @return a new {@link Properties} instance, containing all subpaths of the
+	 *         given key.
 	 * @throws PropertyException
-	 *             If the propertyKey-param is not a property key or is a not
-	 *             part of a property path.
+	 *             if the given key is not a property key or is not part of a
+	 *             property path.
 	 */
-	public Properties get(String propertyKey) throws PropertyException {
-		NullCheck.check(propertyKey, "propertyKey is null");
-		Properties propertyCopy = new Properties(this, propertyKey);
+	public Properties get(String key) throws PropertyException {
+		ObjectChecks.checkForNullReference(key, "key is null");
+		Properties propertyCopy = new Properties(this, key);
 		return propertyCopy;
 	}
 
 	/**
-	 * Get the value from the property path. If the property path a empty String
-	 * return the full root map.
+	 * Get the value from the property path (Example: foo.bar.key). If the
+	 * property path is a empty String, the full root map is returned.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
-	 * @return Object The value from the propertyPath.
+	 *            Example: foo.bar.key
+	 * @return the value from the propertyPath.
 	 * @throws PropertyException
-	 *             If the propertyKey-Path is not a property key or is a not
+	 *             if the propertyKey-Path is not a property key or is a not
 	 *             part of a property path.
 	 */
 	@SuppressWarnings("unchecked")
 	public Object getValue(String propertyPath) throws PropertyException {
 		// add the PreFixPropertyPath if this Property is a copy deeper level
-		String fullPropertyPath = addPath(mPreFixPropertyPath, propertyPath);
+		String fullPropertyPath = addPath(mPropertyPathPrefix, propertyPath);
 
 		// check propertyPath
-		NullCheck.check(fullPropertyPath, "propertyPath is null");
+		ObjectChecks.checkForNullReference(fullPropertyPath,
+				"propertyPath is null");
 
 		// split propertyPath
 		String[] propertyKeyArray = fullPropertyPath.split("\\.");
@@ -190,9 +197,10 @@ public class Properties {
 	 * exist, the default value is returned.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
+	 *            Example: foo.bar.key
 	 * @param defaultValue
-	 * @return Object The value from the propertyPath.
+	 *            is returned when the propertyPath does not exist
+	 * @return the value from the propertyPath.
 	 */
 	public Object getValue(String propertyPath, Object defaultValue) {
 		Object o = null;
@@ -205,15 +213,15 @@ public class Properties {
 	}
 
 	/**
-	 * Get the String-value from the property path. Throw a PropertyException
-	 * when the value is not a String.
+	 * Get the value from the property path as a {@link String}.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
-	 * @return String
+	 *            Example: foo.bar.key
+	 * @return the {@link String} value for the given propertyPath
 	 * @throws PropertyException
 	 *             If the propertyKey-Path is not a property key or is a not
-	 *             part of a property path.
+	 *             part of a property path; also when the value is not a
+	 *             {@link String}
 	 */
 	public String getString(String propertyPath) throws PropertyException {
 		Object o = getValue(propertyPath);
@@ -225,9 +233,10 @@ public class Properties {
 	 * not exist, the default value is returned.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
+	 *            Example: foo.bar.key
 	 * @param defaultValue
-	 * @return String
+	 *            is returned when the propertyPath does not exist
+	 * @return the value for the given propertyPath
 	 */
 	public String getString(String propertyPath, String defaultValue) {
 		Object o = getValue(propertyPath, defaultValue);
@@ -240,15 +249,15 @@ public class Properties {
 	}
 
 	/**
-	 * Get the int-value from the property path. Throw a PropertyException when
-	 * the value is not a int.
+	 * Get the int-value from the property path.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
-	 * @return int
+	 *            Example: foo.bar.key
+	 * @return the {@link Integer} value
 	 * @throws PropertyException
 	 *             If the propertyKey-Path is not a property key or is a not
-	 *             part of a property path.
+	 *             part of a property path; also when the value is not an
+	 *             {@link Integer}
 	 */
 	public int getInt(String propertyPath) throws PropertyException {
 		Object o = getValue(propertyPath);
@@ -260,9 +269,10 @@ public class Properties {
 	 * exist, the default value is returned.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
+	 *            Example: foo.bar.key
 	 * @param defaultValue
-	 * @return int
+	 *            is returned when the propertyPath does not exist
+	 * @return the value for the given propertyPath
 	 */
 	public int getInt(String propertyPath, int defaultValue) {
 		Object o = getValue(propertyPath, defaultValue);
@@ -270,15 +280,16 @@ public class Properties {
 	}
 
 	/**
-	 * Get the double-value from the property path. Throw a PropertyException
-	 * when the value is not a double.
+	 * Get the double-value from the property path.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
-	 * @return double
+	 *            Example: foo.bar.key
+	 *
+	 * @return the {@link Double} value for the given propertyPath
 	 * @throws PropertyException
 	 *             If the propertyKey-Path is not a property key or is a not
-	 *             part of a property path.
+	 *             part of a property path; also when the value is not a
+	 *             {@link Double}
 	 */
 	public double getDouble(String propertyPath) throws PropertyException {
 		Object o = getValue(propertyPath);
@@ -290,9 +301,10 @@ public class Properties {
 	 * not exist, the default value is returned.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
+	 *            Example: foo.bar.key
 	 * @param defaultValue
-	 * @return double
+	 *            is returned when the propertyPath does not exist
+	 * @return the {@link Double} value for the given propertyPath
 	 */
 	public double getDouble(String propertyPath, double defaultValue) {
 		Object o = getValue(propertyPath, defaultValue);
@@ -300,15 +312,15 @@ public class Properties {
 	}
 
 	/**
-	 * Get the boolean-value from the property path. Throw a PropertyException
-	 * when the value is not a boolean.
+	 * Get the boolean-value from the property path.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
-	 * @return boolean
+	 *            Example: foo.bar.key
+	 * @return the {@link Boolean} value for the given propertyPath
 	 * @throws PropertyException
 	 *             If the propertyKey-Path is not a property key or is a not
-	 *             part of a property path.
+	 *             part of a property path; also when the value is not a
+	 *             {@link Boolean}
 	 */
 	public boolean getBoolean(String propertyPath) throws PropertyException {
 		Object o = getValue(propertyPath);
@@ -320,9 +332,10 @@ public class Properties {
 	 * not exist, the default value is returned.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
+	 *            Example: foo.bar.key
 	 * @param defaultValue
-	 * @return boolean
+	 *            is returned when the propertyPath does not exist
+	 * @return the {@link Boolean} value for the given propertyPath
 	 */
 	public boolean getBoolean(String propertyPath, boolean defaultValue) {
 		Object o = getValue(propertyPath, defaultValue);
@@ -330,23 +343,22 @@ public class Properties {
 	}
 
 	/**
-	 * Return all keys of this Properties
+	 * Return all keys of this {@link Properties} object.
 	 *
 	 * @throws PropertyException
-	 *             when loading fails
-	 * @return Set<String>
+	 *             if loading fails
+	 * @return a Set<String> containing all property keys
 	 */
 	public Set<String> getKeySet() throws PropertyException {
 		return load().keySet();
 	}
 
 	/**
-	 *
-	 * Build a property path one level higher
+	 * Remove the last part of a property path.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
-	 * @return foo.bar
+	 *            Example: foo.bar.key
+	 * @return Example: foo.bar
 	 */
 	@SuppressWarnings("unused")
 	private String removeLastToken(String propertyPath) {
@@ -363,14 +375,15 @@ public class Properties {
 
 	/**
 	 *
-	 * Add a property path to an existing. If propertyPath == null or an empty
-	 * String then return pathToAdded.
+	 * Add a property path to an existing.
 	 *
 	 * @param propertyPath
-	 *            foo.bar
+	 *            a property path that will be the prefix to a new concatenated
+	 *            path. Example: foo.bar
 	 * @param pathToAdded
-	 *            new.property
-	 * @return foo.bar.new.property
+	 *            a property path to be appended new.property
+	 * @return Example: foo.bar.new.property; if propertyPath is null or an
+	 *         empty {@link String}, then pathToAdded is returned.
 	 */
 	private String addPath(String propertyPath, String pathToAdded) {
 		if (propertyPath == null || propertyPath.equals("")) {
@@ -381,6 +394,15 @@ public class Properties {
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @param propertyPath
+	 * @param propertyValue
+	 * @throws PropertyException
+	 *             If the propertyKey-Path is not a property key or is a not
+	 *             part of a property path
+	 */
 	@SuppressWarnings("unchecked")
 	private void addToRootMap(String propertyPath, Object propertyValue)
 			throws PropertyException {
@@ -426,23 +448,27 @@ public class Properties {
 
 		// save all
 		save(configMap);
-
 	}
 
 	/**
-	 * Only for private use an Tests
+	 * Creates a new Map<String, Object> from a given array of {@link String}
+	 * keys and a value as {@link Object}. If necessary, nested maps will be
+	 * created for all given keys.
 	 *
 	 * @param mapKeys
+	 *            array of keys as {@link String}
 	 * @param propertyValue
-	 * @return {@link Map}
+	 *            the value to be stored at the "deeped" nested map
+	 * @return a Map<String, Object>, containing nested maps for all keys and
+	 *         the value
 	 */
-	protected Map<String, Object> buildNewNestedMap(String[] mapKeys,
+	public Map<String, Object> buildNewNestedMap(String[] mapKeys,
 			Object propertyValue) {
 		Map<String, Object> rootMap = new HashMap<String, Object>();
 		Map<String, Object> higherNestedMap = new HashMap<String, Object>();
 		Map<String, Object> deeperNestedMap = new HashMap<String, Object>();
 
-		// if only on key, add to the rootMap and return
+		// if only one key, add to the rootMap and return
 		if (mapKeys.length - 1 == 0) {
 			rootMap.put(mapKeys[0], propertyValue);
 			return rootMap;
@@ -478,28 +504,38 @@ public class Properties {
 		return rootMap;
 	}
 
+	/**
+	 * Copies a given {@link String} array from a given start index to the end.
+	 *
+	 * @param from
+	 *            start index for copying
+	 * @param propertyKeyArray
+	 *            a {@link String} array
+	 * @return a copy of the {@link String} array
+	 */
 	private String[] getCopyFrom(int from, String[] propertyKeyArray) {
 		return Arrays.copyOfRange(propertyKeyArray, from,
 				propertyKeyArray.length);
 	}
 
 	/**
-	 * Save the value under the key. Maps and List can only obtain simple
-	 * data-types.
+	 * Save the value with a given key. {@link Map} and {@link List} can only
+	 * contain simple data-types.
 	 *
 	 * @param propertyPath
-	 *            foo.bar.property
+	 *            Example: foo.bar.key
 	 * @param propertyValue
-	 *            Only String|int|double|boolean|Map|List
+	 *            only {@link String}, {@link Integer}, {@link Double},
+	 *            {@link Boolean}, {@link Map} and {@link List} are supported
 	 * @throws PropertyException
-	 *             If the propertyKey-Path is not a property key or is a not
-	 *             part of a property path. Only
-	 *             String|int|double|boolean|Map|List can be set!
+	 *             If the propertyKey-Path is not a property key or is not part
+	 *             of a property path.
 	 */
 	public void set(String propertyPath, Object propertyValue)
 			throws PropertyException {
 		// check propertyPath
-		NullCheck.check(propertyPath, "propertyPath is null");
+		ObjectChecks
+				.checkForNullReference(propertyPath, "propertyPath is null");
 
 		// check propertyValue
 		if (!(propertyValue instanceof String)
@@ -509,12 +545,12 @@ public class Properties {
 				&& !(propertyValue instanceof Map)
 				&& !(propertyValue instanceof List)) {
 			throw new PropertyException(
-					"Only String|int|double|boolean|Map|List can be set!");
+					"Only String, int, double, boolean, Map and List are supported.");
 		}
 
 		// add the mPreFixPropertyPath if this Property is a copy with a deeper
 		// level
-		String fullPropertyPath = addPath(mPreFixPropertyPath, propertyPath);
+		String fullPropertyPath = addPath(mPropertyPathPrefix, propertyPath);
 
 		// add propertyValue with the fullPropertyPath
 		addToRootMap(fullPropertyPath, propertyValue);

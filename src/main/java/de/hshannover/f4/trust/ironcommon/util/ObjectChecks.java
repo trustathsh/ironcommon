@@ -39,20 +39,51 @@
 package de.hshannover.f4.trust.ironcommon.util;
 
 /**
- * @author Marcel Reichenbach
+ * Helper class for checking objects (null checks, equality checks, ...)
  *
+ * @author Arne Welzel
+ * @author Marcel Reichenbach
  */
-public final class Same {
+public final class ObjectChecks {
 
-	private Same() {
+	/**
+	 * Only static calls are allowed.
+	 */
+	private ObjectChecks() {
 	}
 
 	/**
-	 * @param one
-	 * @param other
-	 * @return blubb
+	 * Copied from project: irond (https://github.com/trustathsh/irond.git
+	 * Package: src.de.fhhannover.inform.iron.mapserver.utils
+	 *
+	 * If the given object is null, a {@link NullPointerException} is thrown
+	 * with a given message.
+	 *
+	 * @param object
+	 *            the {@link Object} that is checked for being a null reference
+	 * @param message
+	 *            a {@link String} that is given to the
+	 *            {@link NullPointerException}
 	 */
-	public static boolean check(Object one, Object other) {
+	public static void checkForNullReference(Object object, String message) {
+		if (object == null) {
+			throw new NullPointerException(message);
+		}
+	}
+
+	/**
+	 * Checks equality of two {@link Object}s. If both are null, true is
+	 * returned. Otherwise, one.equals(other) or other.equals(one) are called,
+	 * using the not null-value as the first operator.
+	 *
+	 * @param one
+	 *            a {@link Object}
+	 * @param other
+	 *            another {@link Object}
+	 * @return true, if both {@link Object} are equal or both are null
+	 */
+	public static boolean equalsWithNullReferenceAllowed(Object one,
+			Object other) {
 		if (one != null) {
 			return one.equals(other);
 		} else if (other != null) {
@@ -61,5 +92,4 @@ public final class Same {
 			return true;
 		}
 	}
-
 }

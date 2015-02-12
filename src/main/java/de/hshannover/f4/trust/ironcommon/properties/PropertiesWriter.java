@@ -44,27 +44,34 @@ import java.util.Map;
 import de.hshannover.f4.trust.ironcommon.yaml.YamlWriter;
 
 /**
- * Class that encapsulates writing of Property-YAML-files.
- * @author MR
+ * Class that encapsulates writing of property-files.
+ *
+ * @author Marcel Reichenbach
  */
 public class PropertiesWriter {
 
 	private String mFileName;
 
 	/**
-	 * Create a JyamlWriter for application properties.
-	 * @param fileName The file name or the file path to the yml-file.
+	 * Create a {@link PropertiesWriter} with a given filename.
+	 *
+	 * @param fileName
+	 *            The file name of the properties-file.
 	 */
 	public PropertiesWriter(String fileName) {
 		mFileName = fileName;
 	}
 
 	/**
-	 * Save the Map<String, Object> to the yml-file.
-	 * @param propertiesData The Object to be stored.
-	 * @throws IOException If the file could not open or is a directory.
+	 * Save the Map<String, Object> to the properties-file.
+	 *
+	 * @param data
+	 *            a Map<String, Object> to be stored.
+	 * @throws IOException
+	 *             If the file could not be opened, created (when it doesn't
+	 *             exist) or the given filename is a directory.
 	 */
-	public void save(Map<String, Object> propertiesData) throws IOException {
-		YamlWriter.persist(mFileName, propertiesData);
+	public void save(Map<String, Object> data) throws IOException {
+		YamlWriter.persist(mFileName, data);
 	}
 }
