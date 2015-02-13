@@ -89,13 +89,13 @@ public class Properties {
 	}
 
 	/**
-	 * Load the properties as Map<String, Object>.
+	 * Load the properties as a {@link Map}.
 	 *
 	 * @throws PropertyException
 	 *             if the file could not be opened, created or is directed to a
 	 *             directory
-	 * @return a {@link Map} of {@link String} and {@link Object} containing the
-	 *         properties
+	 * @return a {@link Map}: keys can either point to a "deeper nested"
+	 *         {@link Map} or a value.
 	 */
 	public Map<String, Object> load() throws PropertyException {
 		try {
@@ -108,6 +108,9 @@ public class Properties {
 	/**
 	 * Save all properties in a file.
 	 *
+	 * @param properties
+	 *            the {@link Map} with all stored deeper nested {@link Map}s
+	 *            and/or values.
 	 * @throws PropertyException
 	 *             if the file could not be opened, created or is directed to a
 	 *             directory
@@ -347,7 +350,7 @@ public class Properties {
 	 *
 	 * @throws PropertyException
 	 *             if loading fails
-	 * @return a Set<String> containing all property keys
+	 * @return a {@link Set} containing all property keys
 	 */
 	public Set<String> getKeySet() throws PropertyException {
 		return load().keySet();
@@ -395,10 +398,13 @@ public class Properties {
 	}
 
 	/**
-	 *
+	 * Adds a given value object to the properties {@link Map} corresponding to
+	 * the configuration file, creates deeper nested maps if necessary.
 	 *
 	 * @param propertyPath
+	 *            a property path where the value will be stored at
 	 * @param propertyValue
+	 *            the value to be added to the root map
 	 * @throws PropertyException
 	 *             If the propertyKey-Path is not a property key or is a not
 	 *             part of a property path
@@ -451,16 +457,15 @@ public class Properties {
 	}
 
 	/**
-	 * Creates a new Map<String, Object> from a given array of {@link String}
-	 * keys and a value as {@link Object}. If necessary, nested maps will be
-	 * created for all given keys.
+	 * Creates a new {@link Map} from a given array of keys and a value. If
+	 * necessary, nested maps will be created for all given keys.
 	 *
 	 * @param mapKeys
 	 *            array of keys as {@link String}
 	 * @param propertyValue
 	 *            the value to be stored at the "deeped" nested map
-	 * @return a Map<String, Object>, containing nested maps for all keys and
-	 *         the value
+	 * @return a {@link Map}, containing nested maps for all keys and the given
+	 *         value
 	 */
 	public Map<String, Object> buildNewNestedMap(String[] mapKeys,
 			Object propertyValue) {

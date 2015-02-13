@@ -76,7 +76,10 @@ public final class YamlReader {
 	 * @param clazz
 	 *            The data-type that the content of the yml-file shall be cast
 	 *            into.
-	 * @return The content of the yml-file as instances of Class<T>.
+	 * @param <T>
+	 *            blubb
+	 * @return The content of the yml-file as instances of {@link Class} of type
+	 *         T.
 	 * @throws IOException
 	 *             If the file could not be opened, created (when it doesn't
 	 *             exist) or the given filename is a directory.
@@ -128,13 +131,13 @@ public final class YamlReader {
 	}
 
 	/**
-	 * Load a yml-File as Map<String, Object>.
+	 * Loads a yml-File as {@link Map} containing keys and values, where values
+	 * can be deeper nested {@link Map}s.
 	 *
 	 * @param fileName
 	 *            The file name of the yml-file.
-	 * @return a Map<String, Object> with the content of the yml-file. If the
-	 *         File exists but is empty, a empty Map<String, Object> is
-	 *         returned.
+	 * @return a {@link Map} with the content of the yml-file. If the file
+	 *         exists but is empty, a empty {@link Map} is returned.
 	 * @throws IOException
 	 *             If the file could not be opened, created (when it doesn't
 	 *             exist) or the given filename is a directory.

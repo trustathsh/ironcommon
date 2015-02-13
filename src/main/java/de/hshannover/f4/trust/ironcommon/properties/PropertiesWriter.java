@@ -63,10 +63,11 @@ public class PropertiesWriter {
 	}
 
 	/**
-	 * Save the Map<String, Object> to the properties-file.
+	 * Saves a {@link Map} to the properties-file.
 	 *
 	 * @param data
-	 *            a Map<String, Object> to be stored.
+	 *            a {@link Map} with property keys and values to be stored.
+	 *            Values can be deeper nested {@link Map}s.
 	 * @throws IOException
 	 *             If the file could not be opened, created (when it doesn't
 	 *             exist) or the given filename is a directory.

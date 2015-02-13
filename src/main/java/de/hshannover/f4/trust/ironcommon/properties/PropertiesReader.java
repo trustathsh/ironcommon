@@ -63,9 +63,10 @@ public class PropertiesReader {
 	}
 
 	/**
-	 * Load the properties from the file as a Map<String, Object>.
+	 * Load the properties from the file as a {@link Map}.
 	 *
-	 * @return A Map<String, Object> with property keys and values.
+	 * @return A {@link Map} with property keys and values, where values can be
+	 *         deeper nested {@link Map}s.
 	 * @throws IOException
 	 *             If the file could not be opened, created (when it doesn't
 	 *             exist) or the given filename is a directory.
