@@ -45,3 +45,5 @@ basedirectory from your proyect (e.g.
 https://raw.githubusercontent.com/trustathsh/ironcommon/master/.checkstyle)
 
 check that the path for the hederfile points to the `Dummy.java`-file
+
+after adding the `.checkstyle`-File, it is necessary to import the project again and somtimes it could be necessary to restart eclipse, for example if the eclipse-checkstyle-plugin was already installed and some settings were changed
